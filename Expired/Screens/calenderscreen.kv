@@ -1,0 +1,19 @@
+<CalenderScreen>:
+    Image:
+        source: 'Resources/download.jfif'
+        size_hint_x: 1
+        size_hint_y: 1
+        allow_stretch: True
+        keep_ratio: False
+    Button:
+        text: 'Menu'
+        size_hint: (.2,.1)
+        pos_hint: {'x':0,'y':.9}
+        on_press: root.manager.current = 'menu'
+        background_color: (1,0,0,1)
+    Button:
+        text: 'List'
+        size_hint: (.2,.1)
+        pos_hint: {'x':.8,'y':.9}
+        on_press: root.manager.current = 'list'
+        background_color: (1,0,0,1)

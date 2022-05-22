@@ -1,0 +1,45 @@
+#:import Factory kivy.factory.Factory
+# This covers a layout containing the item objects. Used for both header and items in list
+
+
+
+<ListScreen>:
+    # addItemBtn: addItemBtn
+    Image:
+        source: 'Resources/download.jfif'
+        size_hint_x: 1
+        size_hint_y: 1
+        allow_stretch: True
+        keep_ratio: False
+    MNavigationBar:
+    Toolbar:
+        title: "List screen"
+    # MBtn:
+    #     id: addItemBtn
+    #     text: 'Add item'
+    #     size_hint: (.2,.1)
+    #     pos_hint: {'x':.8,'y':.9}
+    #     background_color: (1,0,0,1)
+    # Button:
+    #     text: 'Menu'
+    #     size_hint: (.2,.1)
+    #     pos_hint: {'x':0,'y':.9}
+    #     on_press: root.manager.current = 'menu'
+    #     background_color: (1,0,0,1)
+    # Button:
+    #     text: 'Calender'
+    #     size_hint: (.2,.1)
+    #     pos_hint: {'x':.8,'y':.9}
+    #     on_press: root.manager.current = 'calender'
+    #     background_color: (1,0,0,1)
+    Label:
+        text:'List of Items'
+        size_hint:(.8,.1)
+        pos_hint:{'x':.1,'y':.8}
+        font_size: 40
+        bold: True
+        color: [0,0,0,1]
+    ItemListView:
+        id:select_view
+        size_hint: (.95, .8)
+        pos_hint: {'x':.03,'y':.1}

@@ -1,0 +1,287 @@
+#:import Factory kivy.factory.Factory
+
+
+<MSnackbar>:
+    text: "Please hold an item to start selection"
+    snackbar_x: dp(15)
+    snackbar_y: dp(20)
+    size_hint_x: .95
+
+<ConfirmDelete>
+    title: "Do you want to delete:"
+    type: "simple"
+
+
+# Layout for where to display labels in the item list and header
+<ItemLayout@RelativeLayout>:
+    exp_date_lbl: " exp date here "
+    exp_date_font_size: "12dp"
+    product_name_lbl: " product name here"
+    product_name_font_size: "12dp"
+    MDLabel:
+        markup: True
+        id: product_name_lbl
+        font_size: root.product_name_font_size
+        text:      root.product_name_lbl
+        pos_hint: {"x":.3,"y":.0}
+    MDLabel:
+        markup: True
+        id: expiry_date_lbl
+        pos_hint:{'x':.01,'y':.0}
+        text: root.exp_date_lbl
+        font_size: root.exp_date_font_size
+
+# List items are subclassing this - this is written here to overwrite kivyMD's own version
+# <BaseListItem>
+<ListItemBase>
+    size_hint_y: None
+    canvas:
+        Color:
+            rgba:
+                self.theme_cls.divider_color if root.divider is not None\
+                else (0, 0, 0, 0)
+        Line:
+            points: (root.x ,root.y, root.x+self.width, root.y) if root.divider == 'Full' else (root.x+root._txt_left_pad, root.y, root.x+self.width-root._txt_left_pad-root._txt_right_pad,root.y)
+        Color:
+            rgba: root.bg_color if root.bg_color else (0, 0, 0, 0)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    ItemLayout:
+        product_name_lbl: "THIS IS A TEST"
+        id: list_item
+
+
+# List item settings
+<FoodItemSelection>
+    bg_color: [.8,.5,.9,.4]
+    _no_ripple_effect: True
+    _txt_top_pad:"0dp"
+    _txt_bot_pad:"0dp"
+    _height: dp(30)
+    height: dp(30)
+
+# <SortIconButton@MDRectangleFlatIconButton>
+<SortIconButton@OneLineIconListItem>
+    theme_text_color: "Custom"
+    _lbl_primary: None
+    # size_hint_x: None
+    icon_: "magnify"
+    text_color: 0, 1, 1, 1
+    # height: dp(5)
+    line_color: 1, 0, 1, 1
+    # icon_color: 1,1,1,1
+    # specific_text_color: 1,0,1,1
+    # theme_icon_color: 1,0,1,1
+    # size_hint: None, None
+    # size: (20,20)
+    # bg_color: 1,1,0,1
+    MDLabel:
+        id: _lbl_primary
+        text: "kdjflskdjf"
+        font_size: dp(5)
+    Icon:
+        id: _icon
+        icon: root.icon_
+
+
+<Icon@IconLeftWidget>
+    theme_text_color: "Custom"
+    text_color: 0, 1, 1, 1
+
+# <SortDropdownMenu@MDDropdownMenu>
+#     SortIconButton:
+#         on_press: root._parent.sortName(ascending=True)
+#         icon: "sort-alphabetical-ascending"
+<SortByPopup>
+
+    anchor_x: 'left'
+    anchor_y: 'bottom'
+    pos_hint: {"right": 1, "bottom": 1}
+    # size: (dp(48),0)
+    size_hint_y: .6
+    size_hint_x: .5
+    title: "Sort by"
+    # canvas:
+    #     Rectangle:
+    #         group: "Background_instruction"
+    #         size: self.size
+    #         pos: self.pos if not isinstance(self, RelativeLayout) else (0, 0)
+    #         # radius: root.radius
+    #         # source: root.background
+    #     Color: 
+    #         rgba: [.9,.9,.9,.1] # Bad solution to annoying backgroun color
+    GridLayout:
+        cols: 1
+        SortIconButton:
+            id: name_ascending
+            text: "Ascending name"
+            on_press: root._parent.sortName(ascending=True)
+            on_release: root.dismiss()
+            icon_:"sort-alphabetical-ascending"
+            # Icon:
+            #     icon: "sort-alphabetical-ascending"
+        SortIconButton:
+            text: "Descending name"
+            on_press: root._parent.sortName(ascending=False)
+            on_release: root.dismiss()
+            icon_:"sort-alphabetical-descending"
+            # Icon:
+            #     icon: "sort-alphabetical-descending"
+        SortIconButton:
+            text: "Ascending date"
+            on_press: root._parent.sortDate(ascending=True)
+            on_release: root.dismiss()
+            # Icon:
+            icon_: "sort-calendar-ascending"
+        SortIconButton:
+            text: "Descending date"
+            on_press: root._parent.sortDate(ascending=False)
+            on_release: root.dismiss()
+            # Icon:
+            icon_: "sort-calendar-descending"
+
+
+<SearchPopUp>:
+    id: search_popup
+    on_open: search_field.show_keyboard()
+    # size_hint_y: .1
+    size_hint_y: None
+    size: (0,search_field.line_height*2)
+    # size: (0,10)
+    size_hint_x: .5
+    canvas:
+        Color:
+            rgba: (1, 1, 1, 1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    # size_y: search_field.line_height
+    # title: None
+    BoxLayout:
+        orientation: "horizontal"
+        TextInput:
+            id:search_field
+            hint_text: 'Search item'
+            size_hint_x: .5
+            pos_hint: {'x': 0, 'y': 0}
+            on_text_validate: root.clickedSearch()
+            # on_enter: root.clickedSearch()
+            readonly: False
+            multiline: False
+            focus: True
+        MDIconButton:
+            icon: "magnify"
+            pos_hint: {"x": .5, "center_y": .5}
+            # theme_icon_color: "Custom"
+            # icon_color: [1,1,0,0]
+            theme_text_color: "Custom"
+            text_color: [1,1,0,1]
+            on_press: root.clickedSearch()
+# Holdng all information about the whole list view
+<ItemListView>:
+    MDBoxLayout:
+        adaptive_height: False # Useless?
+        adaptive_size: False #useless?
+        orientation: "vertical"
+        padding: ([10,10,10,10])
+        spacing: 5     
+            # MDIconButton:
+            #     icon: "magnify"
+            #     pos_hint: {"x": .5, "center_y": .5}
+            #     theme_icon_color: "Custom"
+            #     icon_color: [1,1,0,1]
+            #     on_press: root.searchItems()
+        # Snackbar:
+        #     id: delete_error_snackbar
+        # RelativeLayout: # The part with the search field etc
+        #     size_hint_x: 1
+        #     size_hint_y: .1
+        #     TextInput:
+        #         id:search_field
+        #         hint_text: 'Search item'
+        #         size_hint_x: .5
+        #         pos_hint: {'x': 0, 'y': 0}
+        #         readonly: False
+        #         multiline: False
+        #     MDIconButton:
+        #         icon: "magnify"
+        #         pos_hint: {"x": .5, "center_y": .5}
+        #         on_press: root.searchItems()
+        #     MDLabel:
+        #         text: "Sort by"
+        #         pos_hint: {'x': .7, 'y': 0}
+        #     Button:
+        #         theme_text_color: "Custom"
+        #         text_color: 0, 0, 1, 1
+        #         text: 'Sort by'
+        #         size_hint_x: .1
+        #         pos_hint: {'x': .8, 'y': 0}
+        #         # on_press: root.sortName()
+        #         # on_release: Factory.SortByPopup().open()
+        #         on_release: root.openSortBy()
+            # Button:
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 1, 1
+            #     text: 'Name'
+            #     size_hint_x: .1
+            #     pos_hint: {'x': .8, 'y': 0}
+            #     on_press: root.sortName()
+            # Button:
+            #     theme_text_color: "Custom"
+            #     text: 'Date'
+            #     size_hint_x: .1
+            #     pos_hint: {'x': .9, 'y': 0}
+            #     on_press: root.sortDate()
+        BoxLayout:
+            size_hint_y: .1
+            size_hint_x: 1
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            ItemLayout:
+                exp_date_lbl: "[b]Expiry date[/b] \nYYYY/MM/DD"
+                product_name_lbl: "[b] Product name[/b]"
+                
+        # The list of items but in a scroll view
+        ScrollView:
+            id: scrollview
+            MSelectionList:
+                id: selection_list
+        MDToolbar: # The bar above the whole list part
+            id: toolbar
+            title: "Items"
+            size_hint_y: .1
+            # specific_text_color: 1,0,1,1
+            # md_bg_color: 0, 0, 0, 1
+            # left_action_items: [["menu"]]
+            right_action_items: 
+                [
+                ["magnify",lambda x: root.openSearch()],
+                ["sort",lambda x: root.openSortBy()],
+                ["delete",lambda x: root.deleteSelectedItems()],
+                ["refresh",lambda x: root.refreshList()],
+                ]
+    # MDDropdownMenu:
+    #     id: sort_menu
+            # SortIconButton:
+
+# The list itself which displays the items
+<MSelectionList>:
+    # Not sure about this, just basically copied from kivyMD
+    canvas.before:
+        RoundedRectangle:
+            group: "Background_instruction"
+            size: self.size
+            pos: self.pos if not isinstance(self, RelativeLayout) else (0, 0)
+            radius: root.radius
+            source: root.background
+        Color: 
+            rgba: [.9,1,.1,.0] # Bad solution to annoying backgroun color
+    padding: ([0,0,0,0]) # just moves the widgets in. color rectangle behind stays...
+    spacing: "2dp"
+    md_bg_color: [.8,.5,.9,.0]
+    overlay_color: [1,1,1,0.2]

@@ -1,0 +1,26 @@
+<MenuScreen>:
+    gotolist: gtlist
+    MNavigationBar:
+    Toolbar:
+        title: "Main menu"
+
+    Button:
+        id:gtlist
+        text: 'Go to List'
+        size_hint: (.5,.1)
+        pos_hint: {'x':.25, 'y':.25}
+        on_press: root.changeToList()
+    Button:
+        text: 'Go to Scan'
+        size_hint: (.5,.1)
+        pos_hint: {'x':.25, 'y':.4}
+        on_press: root.manager.current = 'scan'
+    Button:
+        text: 'Go to Settings'
+        size_hint: (.5,.1)
+        pos_hint: {'x':.25, 'y':.1}
+        on_press: root.manager.current = 'settings'
+    
+
+
+
